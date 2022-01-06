@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %} {% endblock title %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+    <section class="vh-100" style="background-color: #eee;">
+      <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+          <div class="col col-lg-9 col-xl-7">
+            <div class="card rounded-3">
+              <div class="card-body p-4">
+
+                <h4 class="text-center my-3 pb-3">To Do App</h4>
+
+                <form method="POST" class="row row-cols-lg-auto g-3 justify-content-center align-items-center mb-4 pb-2" formtarget="_blank">
+                    {% csrf_token %}
+                  <div class="col-12">
+                    <div class="form-outline pb-4">
+                        {{ task_form.title }}
+{#                      <input type="text" id="form1" class="form-control" placeholder="Enter a task here"/>#}
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+{#                    <button type="submit" class="btn btn-warning">Get tasks</button>#}
+                  </div>
+                </form>
+
+                <table class="table mb-4">
+                  <thead>
+                    <tr>
+                      <th scope="col">No.</th>
+                      <th scope="col">Todo item</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Time</th>
+                      <th scope="col">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for task in tasks %}
+                    <tr>
+                      <th scope="row">{{ forloop.counter }}</th>
+                      <td>
+                          {% if task.completed == True %}
+                          <del>{{ task.title }}</del>
+                          {% else %}
+                          {{ task.title }}
+                          {% endif %}
+                      </td>
+                      <td>{{ task.completed|yesno:"Completed,Uncompleted" }}</td>
+                      <td>{{ task.created }}</td>
+                      <td>
+                          <button type="submit" class="btn btn-success ms-1 btn-lg btn-block">
+                              <a style="text-decoration: none" class="text-dark" href="{% url "update_status" task.id %}">Finish</a>
+                          </button>
+                          <button type="submit" class="btn btn-danger ms-1 btn-lg btn-block">
+                              <a style="text-decoration: none" class="text-dark" href="{% url "delete_task" task.id %}">Delete</a>
+                          </button>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+</body>
+</html>
