@@ -22,15 +22,21 @@ def index(request: WSGIRequest) -> HttpResponse:
 
 
 def delete_task(request: WSGIRequest, task_id: int) -> HttpResponse:
-    task = Task.objects.get(pk=task_id)
-    task.delete()
+    try:
+        task = Task.objects.get(pk=task_id)
+        task.delete()
+    except Task.DoesNotExist:
+        return redirect("not_found")
 
     return redirect("index")
 
 
 def update_status(request: WSGIRequest, task_id: int) -> HttpResponse:
-    task = Task.objects.get(pk=task_id)
-    task.completed = True
-    task.save()
+    try:
+        task = Task.objects.get(pk=task_id)
+        task.completed = True
+        task.save()
+    except Task.DoesNotExist:
+        return redirect("not_found")
 
     return redirect("index")
